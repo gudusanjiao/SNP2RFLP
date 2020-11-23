@@ -91,18 +91,40 @@ Assuming our vcf file name is ```SE.parent.vcf```.
 sed 's/,assembly=Salix_purpurea_var_94006.mainGenome.fasta//g' SE.parent.vcf > SE.parent.fixedname.vcf
 ```
 Since we use Salix purpurea as our reference genome, the replacement regular expression is like above. 
-If using different reference genomes or different file names, it has better to check the ID tags before by ```grep "##contig=" SE.parent.vcf``` and replace exact everything after 'length=<Number>' until the last '>'.
+If using different reference genomes or different file names, it is necessary to check the ID tags by ```grep "##contig=" SE.parent.vcf``` before replacing and replace exact everything between ```length=<Number>``` and the last ```>```.
 
 When finishing replacing, we need to compress the file into .gz format for VCF-kit as an input. There is no need to index the new vcf file since the software will do it if there is no index.
 ```bash
 bgzip -c SE.parent.fixedname.vcf > SE.parent.fixedname.vcf.gz
 ```
+The output file 
 
-##
+## Output a table of primers related to polymorphic restriction site
+The software package VCF-kit offers a function named 'primer snip' mode. It takes vcf file as input and output a table of primers designed based on polymorphic restriction sites in between. [Official manual](https://vcf-kit.readthedocs.io/en/latest/primer/) has the detailed parameter settings and examples.
 
+To test if software works appropriately, we can do simple try on command prompt:
+```bash
+vk primer snip --ref=<reference genome fasta> --enzymes=EcoRI <vcf.gz of target population>
+```
+Let the software run for 1 min to see if any errors reported there. If the software runs and keep producing 'Applied N individuals', it means software works perfectly. We can use Ctrl-C to stop it.
 
+We want our result to be stored in a text file. In order to do so, we need to write the command in a shell script and execute it to save the output.
+```bash
+echo "vk primer snip --ref=<reference genome fasta> \
+                     --box-variants \
+                     --polymorphic \
+                     --enzymes=<your choice of restriction enzyme> \
+                     <vcf.gz of target population>" > species1.enzyme1.sh
+# execute the script and set the outputfile
+sh species1.enzyme1.sh > species1.enzyme1.primer.txt
+```
+The software works slow for whole genome size. To run it at this size of data, personally I suggest to use ```screen -S <screen name>``` to create a new screen, ```screen -r <screen name>``` and Ctrl-A + Ctrl-D for reattaching and detaching existing screens, respectively. Another way to avoid long-time waiting is to limit the range of searching for primers by adding parameter ```--region``` to command we use here.
 
-
-
+The output file is a tab-spaced table which looks like below:
+CHROM | POS     | region            | REF | ALT | template_sample | variant_count | ref_sites           | alt_sites                   | restriction_enzyme | restriction_site | restriction_site_length | primer_left          | primer_right         | melting_temperature | amplicon_length | amplicon_region   | amplicon_sequence | 0/0 | 1/1 | polymorphic |
+-------|---------|-------------------|-----|-----|-----------------|---------------|---------------------|-----------------------------|--------------------|------------------|-------------------------|----------------------|----------------------|---------------------|-----------------|-------------------|-------------------|-----|-------|-------------|
+ I     | 1198228 | I:1197728-1198727 | G   | A   | ALT             | 1             | 93,283:93,190,471   | 93:93,661                   | NdeI               | CATATG           | 6                       | gtattcagtgggcaagcagc | GGATTAGGCCACCATCCGAG | 59.547,59.965       | 754             | I:1197943-1198697 | gtatt…            |     |       | FALSE       |
+ I     | 1487691 | I:1487191-1488190 | A   | C   | ALT             | 1             | 548,654:548,106,100 | 356,548,654:356,192,106,100 | BsuRI              | GGCC             | 4                       | TCAAAGCTGTTTTTGGCGGG | CTTCCCGACAACTTTGCTGC | 59.896,60.04        | 754             | I:1487335-1488089 | TCAAA…            |     |       | FALSE       |
+ I     | 1487691 | I:1487191-1488190 | A   | C   | ALT             | 1             | 548,654:548,106,100 | 356,548,654:356,192,106,100 | BsnI               | GGCC             | 4                       | TCAAAGCTGTTTTTGGCGGG | CTTCCCGACAACTTTGCTGC | 59.896,60.04        | 754             | I:1487335-1488089 | TCAAA…            |     |       | FALSE       |
 
 
