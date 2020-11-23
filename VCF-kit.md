@@ -97,7 +97,7 @@ When finishing replacing, we need to compress the file into .gz format for VCF-k
 ```bash
 bgzip -c SE.parent.fixedname.vcf > SE.parent.fixedname.vcf.gz
 ```
-The output file 
+The output file is in the right format for VCF-kit to use.
 
 ## Output a table of primers related to polymorphic restriction site
 The software package VCF-kit offers a function named 'primer snip' mode. It takes vcf file as input and output a table of primers designed based on polymorphic restriction sites in between. [Official manual](https://vcf-kit.readthedocs.io/en/latest/primer/) has the detailed parameter settings and examples.
