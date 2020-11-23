@@ -51,7 +51,7 @@ There will be a result at ```~/anaconda3/lib/python3.6/site-packages/vcfkit/stat
 ```bash
 find ~ -iname primer3.py -type f
 ```
-*Noticed here, it is possible that you cannot find this config file due to new primer3 version. If so, you can use path of mine: ```/home/nan/anaconda3/lib/python3.6/site-packages/vcfkit/static/primer3_config```. I did not see any errors by using others config file right now.*
+> Noticed here, it is possible that you cannot find this config file due to new primer3 version. If so, you can use path of mine: ```/home/nan/anaconda3/lib/python3.6/site-packages/vcfkit/static/primer3_config```. I did not see any errors by using others config file right now.
 
 Use text editors (like: nano, vi etc.) to open the file locate at ```~/anaconda3/envs/vcf-kit/lib/python3.7/site-packages/vcfkit/utils/primer3.py```.
 In this python script, find 'class primer3'. Under \# Global default, there is a block of script:
