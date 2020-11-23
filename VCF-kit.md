@@ -9,7 +9,7 @@ To prepare for installing VCF-kit, make sure system has pip and anaconda install
 If new users do not have these two tools installed, you can refer to: [pip installing guide](https://pip.pypa.io/en/stable/installing/) 
 and [anaconda installing guide](https://docs.anaconda.com/anaconda/install/linux/) to get instructions for installation. Once required tools are prepared, 
 execute below commands in commandline:
-'
+''
 conda config --add channels bioconda
 conda config --add channels conda-forge
 conda create -n vcf-kit \
@@ -20,4 +20,4 @@ conda create -n vcf-kit \
   "blast>=2.2.31" \
   "muscle>=3.8.31" \
   "primer3>=2.5.0"
-'
+''
